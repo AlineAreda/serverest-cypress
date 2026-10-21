@@ -1,4 +1,4 @@
-# ServeRest | Automação de Testes com Cypress
+# 💻 Challenge QA | Automação de Testes API e Web com Cypress — ServeRest
 
 ![Cypress](https://img.shields.io/badge/Cypress-16.2.0-17202C)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E)
@@ -9,7 +9,7 @@ Projeto desenvolvido como **desafio técnico de Quality Assurance**, com foco em
 
 **Aplicação sob teste:** [ServeRest](https://serverest.dev/) — API REST e aplicação Web de demonstração.
 
-## 1. Objetivo e abordagem
+## 📋 Descrição e Estratégia de Testes
 
 A solução utiliza o Cypress para validar comportamentos essenciais do ServeRest em duas camadas:
 
@@ -18,9 +18,9 @@ A solução utiliza o Cypress para validar comportamentos essenciais do ServeRes
 
 Para os cenários Web, operações de apoio como preparação de usuários, autenticação administrativa e exclusão de produtos utilizam requisições à API. Assim, o teste da interface concentra-se nas interações relevantes ao cenário, reduzindo etapas desnecessárias.
 
-**Escopo:** cobertura inicial e representativa dos fluxos selecionados; não pretende ser uma cobertura exaustiva da aplicação.
+✅ **Escopo:** cobertura inicial e representativa dos fluxos selecionados; não pretende ser uma cobertura exaustiva da aplicação.
 
-## 2. Tecnologias
+## 🛠️ Tecnologias e Ferramentas
 
 | Tecnologia | Finalidade |
 | --- | --- |
@@ -32,9 +32,9 @@ Para os cenários Web, operações de apoio como preparação de usuários, aute
 | Allure Report | Resultados e relatórios de execução |
 | GitHub Actions | Execução em CI e armazenamento de evidências |
 
-## 3. Cenários automatizados
+## 🧪 Testes Automatizados
 
-### API — Usuários
+### 🔌 API — Usuários
 
 | ID | Cenário | Resultado esperado |
 | --- | --- | --- |
@@ -44,7 +44,7 @@ Para os cenários Web, operações de apoio como preparação de usuários, aute
 | CT-004 | Consultar ID inexistente | HTTP 400 e usuário não encontrado |
 | CT-005 | Consultar ID inválido | HTTP 400 e validação do formato do ID |
 
-### Web — Login
+### 🔐 Web — Login
 
 | ID | Cenário |
 | --- | --- |
@@ -55,16 +55,16 @@ Para os cenários Web, operações de apoio como preparação de usuários, aute
 | CT-WEB-005 | Login de usuário comum |
 | CT-WEB-006 | Logout |
 
-### Web — Produtos
+### 📦 Web — Produtos
 
 | ID | Cenário |
 | --- | --- |
 | CT-WEB-007 | Cadastro de produto com preenchimento e upload de imagem |
 | CT-WEB-008 | Validação dos campos obrigatórios no cadastro de produto |
 
-**Total implementado: 13 cenários.** A aprovação de todos eles depende de uma execução validada; esta contagem representa cobertura implementada, não taxa de sucesso.
+✅ **Total implementado: 13 cenários.** A aprovação de todos eles depende de uma execução validada; esta contagem representa cobertura implementada, não taxa de sucesso.
 
-## 4. Estrutura do projeto
+## 📂 Estrutura do Projeto
 
 ```text
 serverest-cypress/
@@ -102,7 +102,9 @@ serverest-cypress/
 - **`utils.js`**: funções puras, incluindo geração de ID e normalização de texto.
 - **`cypress.config.js`**: URLs, configurações do Cypress e integração Allure.
 
-## 5. Pré-requisitos e instalação
+## 🚀 Como Executar o Projeto
+
+### 📌 Pré-requisitos e Instalação
 
 - Git
 - Node.js 22 (versão utilizada no workflow de CI)
@@ -124,7 +126,7 @@ Os testes utilizam os ambientes públicos, definidos em `cypress.config.js`:
 
 Não é necessário subir a aplicação ServeRest localmente para executar a configuração atual.
 
-## 6. Como executar os testes
+### 👩‍💻 Executar os Testes
 
 **Modo interativo:**
 
@@ -150,7 +152,7 @@ yarn cy:run --spec "cypress/e2e/api/**/*.cy.js"
 yarn cy:run --spec "cypress/e2e/web/**/*.cy.js"
 ```
 
-## 7. Estratégia de massa e isolamento
+## 🧹 Gestão de Massa e Isolamento dos Testes
 
 - Dados de usuários e produtos ficam em fixtures JSON.
 - Os cenários Web de login preparam os usuários necessários por meio de `garantirUsuarioCadastrado()`, que consulta o e-mail e cadastra quando não existe.
@@ -159,9 +161,9 @@ yarn cy:run --spec "cypress/e2e/web/**/*.cy.js"
 - Os testes de produtos interceptam a requisição de cadastro para verificar o status HTTP e obter o ID necessário à limpeza.
 - A validação das mensagens de erro de produtos usa normalização de texto para lidar com diferenças de acentuação, espaços e caixa.
 
-**Limitações conhecidas:** a API pública é compartilhada e pode ter dados removidos, cadastros com e-mails previamente utilizados, credenciais diferentes das fixtures ou limitação de requisições. A preparação de usuário por e-mail não valida a senha de um registro já existente. Na versão atualmente documentada, a autenticação administrativa da suíte de produtos usa `cy.session()` e não garante o recadastro antes do login. Esses pontos podem afetar a estabilidade dos testes e são oportunidades de evolução.
+⚠️ **Limitações conhecidas:** a API pública é compartilhada e pode ter dados removidos, cadastros com e-mails previamente utilizados, credenciais diferentes das fixtures ou limitação de requisições. A preparação de usuário por e-mail não valida a senha de um registro já existente. Na versão atualmente documentada, a autenticação administrativa da suíte de produtos usa `cy.session()` e não garante o recadastro antes do login. Esses pontos podem afetar a estabilidade dos testes e são oportunidades de evolução.
 
-## 8. Relatórios com Allure
+## 📊 Relatórios de Testes — Allure
 
 A integração `allure-cypress` coleta resultados durante a execução.
 
@@ -176,11 +178,11 @@ yarn allure open allure-report
 
 A disponibilidade de screenshots e outros anexos depende dos dados efetivamente capturados durante a execução.
 
-## 9. Integração contínua — GitHub Actions
+## 🤖 Execução Automática — GitHub Actions
 
 O workflow está em [`.github/workflows/cypress.yml`](.github/workflows/cypress.yml).
 
-**Gatilhos configurados:**
+📌 **Gatilhos configurados:**
 
 1. **Automático:** após uma Pull Request ser mesclada na branch `main`.
 2. **Manual:** pela aba **Actions → Testes Cypress e Allure → Run workflow**, selecionando a branch.
@@ -189,7 +191,7 @@ O pipeline instala dependências, executa `yarn cy:run`, tenta gerar o relatóri
 
 Uma falha na suíte é refletida no resultado final do job. A geração e o upload de evidências são tentados mesmo quando os testes falham.
 
-## 10. Decisões técnicas
+## 🏗️ Decisões Técnicas
 
 - **Separação API/Web:** validação de contratos diretamente na API e de comportamento visual pela interface.
 - **Commands por domínio:** organização em usuários, login e produtos, evitando duplicação.
@@ -198,7 +200,7 @@ Uma falha na suíte é refletida no resultado final do job. A geração e o uplo
 - **Assertions explícitas:** verificação de status HTTP, mensagens, navegação e dados retornados.
 - **CI e evidências:** execução reproduzível e relatórios acessíveis a partir do GitHub Actions.
 
-## 11. Melhorias futuras
+## 💡 Melhorias Futuras
 
 - Tornar a autenticação administrativa resiliente à limpeza da base pública.
 - Tratar colisões de e-mail com credenciais divergentes.
@@ -208,6 +210,8 @@ Uma falha na suíte é refletida no resultado final do job. A geração e o uplo
 
 ---
 
+## 📌 Considerações Finais
+
 **Repositório:** [AlineAreda/serverest-cypress](https://github.com/AlineAreda/serverest-cypress)
 
-Projeto desenvolvido para demonstrar organização, pensamento crítico e aplicação prática de automação de testes em um desafio técnico de QA.
+Desenvolvido com ❤️ por [Aline Areda](https://github.com/AlineAreda), como demonstração de organização, pensamento crítico e aplicação prática de automação de testes em um desafio técnico de QA.
