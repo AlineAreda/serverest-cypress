@@ -62,7 +62,23 @@ Para os cenários Web, operações de apoio como preparação de usuários, aute
 | CT-WEB-007 | Cadastro de produto com preenchimento e upload de imagem |
 | CT-WEB-008 | Validação dos campos obrigatórios no cadastro de produto |
 
-✅ **Total implementado: 13 cenários.** A aprovação de todos eles depende de uma execução validada; esta contagem representa cobertura implementada, não taxa de sucesso.
+✅ **Total implementado: 13 cenários.** A evidência do Allure abaixo registra uma execução em 21/10/2026 com os 13 testes aprovados (100%). Esse resultado corresponde à execução apresentada, não a uma garantia de sucesso em todas as execuções.
+
+## 📸 Evidências de Execução
+
+### 🎥 Demonstração do Cypress
+
+Registro visual da execução e da organização das suítes automatizadas de API e Web.
+
+[![Demonstração da execução Cypress](https://github.com/user-attachments/assets/93cb4253-6e6f-4a85-a831-4f8885ce2666)](https://github.com/user-attachments/assets/93cb4253-6e6f-4a85-a831-4f8885ce2666)
+
+### 📊 Resultado da execução — Allure Report
+
+Na execução registrada em **21/10/2026**, os **13 cenários foram aprovados (100%)**, distribuídos em **5 testes de API** e **8 testes Web**.
+
+![Relatório Allure com 13 testes aprovados](https://github.com/user-attachments/assets/6806efbf-0d97-47bd-aa3c-bfe349264d8f)
+
+> As evidências foram anexadas ao GitHub. O percentual apresentado refere-se à execução registrada no relatório.
 
 ## 📂 Estrutura do Projeto
 
