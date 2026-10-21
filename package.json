@@ -9,6 +9,8 @@
     "test": "cypress run"
   },
   "devDependencies": {
+    "allure": "^3.21.0",
+    "allure-cypress": "^3.14.0",
     "cypress": "^16.2.0",
     "cypress-plugin-api": "^2.12.3"
   }
