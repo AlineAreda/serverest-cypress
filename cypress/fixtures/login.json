@@ -1,0 +1,21 @@
+{
+  "administrador": {
+    "nome": "Marina Alves",
+    "email": "mari.adm@email.com",
+    "password": "Teste@123",
+    "administrador": "true"
+  },
+  "usuarioComum": {
+    "nome": "Lucas Ferreira",
+    "email": "lucas.comum@email.com",
+    "password": "Teste@123",
+    "administrador": "false"
+  },
+  "invalidos": {
+    "emailIncorreto": "usuario.inexistente@email.com",
+    "emailMalFormatado": "emailinvalido",
+    "senhaIncorreta": "SenhaErrada@123",
+    "emailVazio": "",
+    "senhaVazia": ""
+  }
+}
