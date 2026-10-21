@@ -1,0 +1,82 @@
+# ==========================================
+# DEPENDÊNCIAS - NODE.JS / YARN
+# ==========================================
+node_modules/
+.pnp.*
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.yarn/virtual/
+
+# ==========================================
+# CYPRESS - ARQUIVOS GERADOS
+# ==========================================
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+cypress/results/
+cypress/reports/
+cypress/coverage/
+
+# ==========================================
+# ALLURE - RESULTADOS E RELATÓRIOS
+# ==========================================
+allure-results/
+allure-report/
+.allure/
+allure-history/
+
+# ==========================================
+# COVERAGE
+# ==========================================
+coverage/
+.nyc_output/
+
+# ==========================================
+# LOGS
+# ==========================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================================
+# VARIÁVEIS DE AMBIENTE E SEGREDOS
+# ==========================================
+.env
+.env.*
+!.env.example
+cypress.env.json
+*.pem
+*.key
+
+# ==========================================
+# CACHE E ARQUIVOS TEMPORÁRIOS
+# ==========================================
+.cache/
+.tmp/
+temp/
+tmp/
+*.tmp
+*.bak
+*.swp
+
+# ==========================================
+# EDITORES E SISTEMA OPERACIONAL
+# ==========================================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.iml
+
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ==========================================
+# BUILD
+# ==========================================
+dist/
+build/

@@ -1,0 +1,15 @@
+{
+  "name": "serverest-cypress",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "yarn@4.5.1",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "test": "cypress run"
+  },
+  "devDependencies": {
+    "cypress": "^16.2.0",
+    "cypress-plugin-api": "^2.12.3"
+  }
+}

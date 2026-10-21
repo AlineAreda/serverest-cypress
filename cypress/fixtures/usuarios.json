@@ -1,0 +1,25 @@
+
+{
+  "cadastro": {
+    "sucesso": {
+      "administrador": {
+        "nome": "Bruno Fernandes",
+        "email": "brunofernandes@email.com",
+        "password": "Senha@123",
+        "administrador": "true"
+      },
+      "usuarioComum": {
+        "nome": "Saulo Silva",
+        "email": "saulosilva@email.com",
+        "password": "Senha@123",
+        "administrador": "false"
+      }
+    },
+    "duplicado": {
+      "nome": "Mara Santos",
+      "email": "marasantos@email.com",
+      "password": "Senha@123",
+      "administrador": "false"
+    }    
+  }
+}
