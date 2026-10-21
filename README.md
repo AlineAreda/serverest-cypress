@@ -171,13 +171,14 @@ yarn cy:run --spec "cypress/e2e/web/**/*.cy.js"
 ## 🧹 Gestão de Massa e Isolamento dos Testes
 
 - Dados de usuários e produtos ficam em fixtures JSON.
-- Os cenários Web de login preparam os usuários necessários por meio de `garantirUsuarioCadastrado()`, que consulta o e-mail e cadastra quando não existe.
+- Os cenários Web preparam usuários por meio de `garantirUsuarioCadastrado()`: o comando consulta o e-mail, cadastra quando não existe e, para registros existentes, verifica o perfil e autentica com as credenciais esperadas.
 - Testes de API de usuários excluem os registros criados ao final do cenário, quando há um ID disponível.
 - O cadastro Web de produtos utiliza nome com timestamp para reduzir colisões e tenta excluir o produto criado ao final.
+- A autenticação administrativa prepara o usuário, realiza um novo login via API por cenário e disponibiliza o token à aplicação Web, sem reutilizar sessões com `cy.session()`.
 - Os testes de produtos interceptam a requisição de cadastro para verificar o status HTTP e obter o ID necessário à limpeza.
 - A validação das mensagens de erro de produtos usa normalização de texto para lidar com diferenças de acentuação, espaços e caixa.
 
-⚠️ **Limitações conhecidas:** a API pública é compartilhada e pode ter dados removidos, cadastros com e-mails previamente utilizados, credenciais diferentes das fixtures ou limitação de requisições. A preparação de usuário por e-mail não valida a senha de um registro já existente. Na versão atualmente documentada, a autenticação administrativa da suíte de produtos usa `cy.session()` e não garante o recadastro antes do login. Esses pontos podem afetar a estabilidade dos testes e são oportunidades de evolução.
+⚠️ **Limitações conhecidas:** o ServeRest público é compartilhado e pode sofrer reinicializações, colisões de e-mail ou indisponibilidade. Quando um e-mail já existe com credenciais ou perfil divergentes, a preparação falha com uma mensagem explícita, sem modificar registros de terceiros. A autenticação administrativa é refeita por cenário, mas o ambiente continua sujeito a alterações externas. A limpeza de produtos depende da captura do ID após a resposta de cadastro.
 
 ## 📊 Relatórios de Testes — Allure
 
@@ -218,11 +219,11 @@ Uma falha na suíte é refletida no resultado final do job. A geração e o uplo
 
 ## 💡 Melhorias Futuras
 
-- Tornar a autenticação administrativa resiliente à limpeza da base pública.
-- Tratar colisões de e-mail com credenciais divergentes.
-- Ampliar cenários de API e Web de acordo com risco e prioridade.
-- Evoluir a categorização e as evidências do Allure.
-- Avaliar ambiente ServeRest isolado para reduzir dependência da instância pública.
+- **Ampliar a cobertura por risco:** acrescentar cenários funcionais, negativos e de integração conforme criticidade dos fluxos.
+- **Evoluir a massa de testes:** gerar usuários exclusivos por execução para reduzir colisões na instância pública.
+- **Aprimorar a execução em CI:** avaliar seleção de suítes e estratégias de otimização do tempo de feedback.
+- **Expandir a rastreabilidade:** categorizar cenários e acompanhar tendências de execução no Allure.
+- **Avaliar ambiente isolado:** executar o ServeRest em ambiente controlado para reduzir interferências externas.
 
 ---
 
