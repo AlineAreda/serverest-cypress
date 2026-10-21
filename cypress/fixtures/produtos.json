@@ -1,0 +1,11 @@
+{
+  "cadastro": {
+    "sucesso": {
+      "nome": "Mouse Gamer Razer Viper Mini Signature",
+      "preco": 6299,
+      "descricao": "Edition Branco - 30000dpi - 49g - 8khz",
+      "quantidade": 10,
+      "imagem": "imagens/mouse-viper.png" 
+    }
+  }
+}

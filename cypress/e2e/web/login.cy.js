@@ -57,4 +57,25 @@ it('CT-WEB-004 - Senha é obrigatória', function () {
   cy.location('pathname').should('eq', '/login');
 });
 
+it('CT-WEB-005 - Deve realizar login de usuário comum com sucesso', function () {
+  const usuarioData = this.login.usuarioComum;
+
+  cy.preencherFormLogin(usuarioData);
+  cy.submeterLogin();
+
+  cy.verificarPagina('/home', 'Serverest Store');
+});
+
+it('CT-WEB-006 - Deve realizar logout com sucesso', function () {
+  const usuarioData = this.login.usuarioComum;
+
+  cy.preencherFormLogin(usuarioData);
+  cy.submeterLogin();
+
+  cy.verificarPagina('/home', 'Serverest Store');
+  cy.realizarLogout();
+
+  cy.contains('h1', 'Login').should('be.visible');
+});
+
 });

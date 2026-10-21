@@ -19,6 +19,32 @@ Cypress.Commands.add('realizarLogin', (usuario, permitirErro = false) => {
   });
 });
 
+// Autenticar administrador pela API e reutilizar a sessão Web
+Cypress.Commands.add('autenticarAdministrador', (usuario) => {
+  cy.session(['administrador', usuario.email], () => {
+    cy.realizarLogin(usuario).then((response) => {
+      const token = response.body.authorization;
+
+      cy.visit('/login', {
+        onBeforeLoad(win) {
+          win.localStorage.setItem('serverest/userToken', token);
+          win.localStorage.setItem('serverest/userEmail', usuario.email);
+          win.localStorage.setItem('serverest/userNome', usuario.nome);
+        }
+      });
+    });
+  }, {
+    validate() {
+      cy.window().then((win) => {
+        expect(win.localStorage.getItem('serverest/userToken'))
+          .to.match(/^Bearer .+/);
+      });
+    }
+  });
+
+  cy.visit('/admin/home');
+});
+
 // Acessar a página de login
 Cypress.Commands.add('acessarLogin', () => {
   cy.visit('/login');
@@ -38,7 +64,6 @@ Cypress.Commands.add('preencherFormLogin', (usuario) => {
       .type(usuario.password);
   }
 });
-
 
 // Clicar no botão Entrar
 Cypress.Commands.add('submeterLogin', () => {
@@ -64,4 +89,13 @@ Cypress.Commands.add('verificarUsuarioLogado', (nome) => {
     .should('be.visible')
     .and('contain.text', 'Bem Vindo')
     .and('contain.text', nome);
+});
+
+// Realizar logout
+Cypress.Commands.add('realizarLogout', () => {
+  cy.get('[data-testid="logout"]')
+    .should('be.visible')
+    .click();
+
+  cy.location('pathname').should('eq', '/login');
 });
