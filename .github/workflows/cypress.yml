@@ -1,0 +1,62 @@
+name: Testes Cypress e Allure
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  testes:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Habilitar Yarn 4
+        run: corepack enable
+
+      - name: Instalar dependências
+        run: yarn install --immutable
+
+      - name: Executar testes Cypress
+        id: cypress
+        continue-on-error: true
+        run: yarn cy:run
+
+      - name: Gerar relatório Allure
+        if: always()
+        run: |
+          if [ -d allure-results ] && [ "$(ls -A allure-results)" ]; then
+            yarn allure generate allure-results --clean -o allure-report
+          else
+            echo "Nenhum resultado Allure encontrado."
+          fi
+
+      - name: Publicar evidências e relatório
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-allure-${{ github.run_number }}
+          path: |
+            allure-results/
+            allure-report/
+            cypress/screenshots/
+            cypress/videos/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Falhar workflow se os testes falharem
+        if: steps.cypress.outcome == 'failure'
+        run: exit 1
