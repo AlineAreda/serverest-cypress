@@ -1,6 +1,7 @@
+
 const urlApi = Cypress.expose('apiUrl');
 
-// POST - Realizar login
+// POST - Realizar login pela API
 Cypress.Commands.add('realizarLogin', (usuario, permitirErro = false) => {
   return cy.request({
     method: 'POST',
@@ -13,42 +14,62 @@ Cypress.Commands.add('realizarLogin', (usuario, permitirErro = false) => {
   }).then((response) => {
     if (!permitirErro) {
       expect(response.status).to.eq(200);
+      expect(response.body.authorization)
+        .to.be.a('string')
+        .and.match(/^Bearer .+/);
     }
 
     return response;
   });
 });
 
+// Garantir administrador e autenticar na aplicação Web
 Cypress.Commands.add('autenticarAdministrador', () => {
-  cy.fixture('login').then((login) => {
+  return cy.fixture('login').then((login) => {
     const usuario = login.administrador;
 
-    cy.session(['administrador', usuario.email], () => {
-      cy.realizarLogin(usuario).then((response) => {
+    // Prepara a massa e valida as credenciais
+    return cy.garantirUsuarioCadastrado(usuario).then(() => {
+      return cy.realizarLogin(usuario).then((response) => {
         const token = response.body.authorization;
 
-        cy.visit('/login', {
+        // Abre a aplicação com os dados de autenticação
+        cy.visit('/admin/home', {
           onBeforeLoad(win) {
-            win.localStorage.setItem('serverest/userToken', token);
-            win.localStorage.setItem('serverest/userEmail', usuario.email);
-            win.localStorage.setItem('serverest/userNome', usuario.nome);
+            win.localStorage.setItem(
+              'serverest/userToken',
+              token
+            );
+
+            win.localStorage.setItem(
+              'serverest/userEmail',
+              usuario.email
+            );
+
+            win.localStorage.setItem(
+              'serverest/userNome',
+              usuario.nome
+            );
           }
         });
-      });
-    }, {
-      validate() {
-        cy.window().then((win) => {
-          expect(win.localStorage.getItem('serverest/userToken'))
-            .to.match(/^Bearer .+/);
+
+        // Confirma que a navegação foi concluída
+        cy.location('pathname')
+          .should('eq', '/admin/home');
+
+        // Retorna o token utilizado na autenticação
+        return cy.window().then((win) => {
+          const tokenArmazenado = win.localStorage.getItem(
+            'serverest/userToken'
+          );
+
+          expect(tokenArmazenado)
+            .to.eq(token);
+
+          return tokenArmazenado;
         });
-      }
+      });
     });
-  });
-
-  cy.visit('/admin/home');
-
-  return cy.window().then((win) => {
-    return win.localStorage.getItem('serverest/userToken');
   });
 });
 
@@ -62,8 +83,12 @@ Cypress.Commands.add('autenticarUsuario', (usuario, permitirErro = false) => {
 // Acessar a página de login
 Cypress.Commands.add('acessarLogin', () => {
   cy.visit('/login');
-  cy.url().should('include', '/login');
-  cy.contains('h1', 'Login').should('be.visible');
+
+  cy.location('pathname')
+    .should('eq', '/login');
+
+  cy.contains('h1', 'Login')
+    .should('be.visible');
 });
 
 // Preencher formulário de login
@@ -93,8 +118,11 @@ Cypress.Commands.add('verificarMensagemErro', (mensagemEsperada) => {
 
 // Verificar página acessada
 Cypress.Commands.add('verificarPagina', (rota, tituloPagina) => {
-  cy.location('pathname').should('eq', rota);
-  cy.contains('h1', tituloPagina).should('be.visible');
+  cy.location('pathname')
+    .should('eq', rota);
+
+  cy.contains('h1', tituloPagina)
+    .should('be.visible');
 });
 
 // Verificar usuário administrador autenticado
@@ -111,5 +139,6 @@ Cypress.Commands.add('realizarLogout', () => {
     .should('be.visible')
     .click();
 
-  cy.location('pathname').should('eq', '/login');
+  cy.location('pathname')
+    .should('eq', '/login');
 });

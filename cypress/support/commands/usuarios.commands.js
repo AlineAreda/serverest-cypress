@@ -8,7 +8,7 @@ Cypress.Commands.add('consultarUsuarios', (filtros = {}) => {
     url: `${urlApi}/usuarios`,
     qs: filtros,
     failOnStatusCode: false
-  }).then((response) => response);
+  });
 });
 
 // GET - Consultar usuário por ID
@@ -17,7 +17,7 @@ Cypress.Commands.add('consultarUsuarioPorId', (id, permitirErro = false) => {
     method: 'GET',
     url: `${urlApi}/usuarios/${id}`,
     failOnStatusCode: !permitirErro
-  }).then((response) => response);
+  });
 });
 
 // POST - Cadastrar usuário
@@ -27,7 +27,7 @@ Cypress.Commands.add('cadastrarUsuario', (usuario, permitirErro = false) => {
     url: `${urlApi}/usuarios`,
     body: usuario,
     failOnStatusCode: !permitirErro
-  }).then((response) => response);
+  });
 });
 
 // PUT - Atualizar usuário
@@ -37,7 +37,7 @@ Cypress.Commands.add('atualizarUsuario', (id, dados, permitirErro = false) => {
     url: `${urlApi}/usuarios/${id}`,
     body: dados,
     failOnStatusCode: !permitirErro
-  }).then((response) => response);
+  });
 });
 
 // DELETE - Excluir usuário por ID
@@ -49,14 +49,15 @@ Cypress.Commands.add('excluirUsuarioPorId', (id, permitirErro = false) => {
   }).then((response) => {
     if (!permitirErro) {
       expect(response.status).to.eq(200);
-      expect(response.body.message).to.eq('Registro excluído com sucesso');
+      expect(response.body.message)
+        .to.eq('Registro excluído com sucesso');
     }
 
     return response;
   });
 });
 
-// Garantir que o usuário esteja cadastrado antes da autenticação
+// Garantir que o usuário exista e possua as credenciais esperadas
 Cypress.Commands.add('garantirUsuarioCadastrado', (usuario) => {
   return cy.consultarUsuarios({ email: usuario.email }).then((response) => {
     expect(response.status).to.eq(200);
@@ -65,13 +66,39 @@ Cypress.Commands.add('garantirUsuarioCadastrado', (usuario) => {
       (item) => item.email === usuario.email
     );
 
-    if (usuarioExistente) {
-      return cy.wrap(usuarioExistente);
+    // Usuário não existe: realiza o cadastro
+    if (!usuarioExistente) {
+      return cy.cadastrarUsuario(usuario).then((cadastro) => {
+        expect(cadastro.status).to.eq(201);
+        expect(cadastro.body._id).to.be.a('string').and.not.be.empty;
+
+        return cadastro.body;
+      });
     }
 
-    return cy.cadastrarUsuario(usuario).then((cadastro) => {
-      expect(cadastro.status).to.eq(201);
-      return cadastro.body;
+    // Usuário existe: valida o perfil
+    expect(
+      usuarioExistente.administrador,
+      `Perfil divergente para ${usuario.email}`
+    ).to.eq(usuario.administrador);
+
+    // Valida as credenciais antes de reutilizar o cadastro
+    return cy.request({
+      method: 'POST',
+      url: `${urlApi}/login`,
+      body: {
+        email: usuario.email,
+        password: usuario.password
+      },
+      failOnStatusCode: false
+    }).then((login) => {
+      expect(
+        login.status,
+        `Credenciais divergentes para ${usuario.email}. ` +
+        'Utilize um usuário de teste com dados exclusivos.'
+      ).to.eq(200);
+
+      return usuarioExistente;
     });
   });
 });
