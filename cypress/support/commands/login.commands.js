@@ -19,30 +19,44 @@ Cypress.Commands.add('realizarLogin', (usuario, permitirErro = false) => {
   });
 });
 
-// Autenticar administrador pela API e reutilizar a sessão Web
-Cypress.Commands.add('autenticarAdministrador', (usuario) => {
-  cy.session(['administrador', usuario.email], () => {
-    cy.realizarLogin(usuario).then((response) => {
-      const token = response.body.authorization;
+Cypress.Commands.add('autenticarAdministrador', () => {
+  cy.fixture('login').then((login) => {
+    const usuario = login.administrador;
 
-      cy.visit('/login', {
-        onBeforeLoad(win) {
-          win.localStorage.setItem('serverest/userToken', token);
-          win.localStorage.setItem('serverest/userEmail', usuario.email);
-          win.localStorage.setItem('serverest/userNome', usuario.nome);
-        }
+    cy.session(['administrador', usuario.email], () => {
+      cy.realizarLogin(usuario).then((response) => {
+        const token = response.body.authorization;
+
+        cy.visit('/login', {
+          onBeforeLoad(win) {
+            win.localStorage.setItem('serverest/userToken', token);
+            win.localStorage.setItem('serverest/userEmail', usuario.email);
+            win.localStorage.setItem('serverest/userNome', usuario.nome);
+          }
+        });
       });
+    }, {
+      validate() {
+        cy.window().then((win) => {
+          expect(win.localStorage.getItem('serverest/userToken'))
+            .to.match(/^Bearer .+/);
+        });
+      }
     });
-  }, {
-    validate() {
-      cy.window().then((win) => {
-        expect(win.localStorage.getItem('serverest/userToken'))
-          .to.match(/^Bearer .+/);
-      });
-    }
   });
 
   cy.visit('/admin/home');
+
+  return cy.window().then((win) => {
+    return win.localStorage.getItem('serverest/userToken');
+  });
+});
+
+// Garantir cadastro e realizar login pela API
+Cypress.Commands.add('autenticarUsuario', (usuario, permitirErro = false) => {
+  return cy.garantirUsuarioCadastrado(usuario).then(() => {
+    return cy.realizarLogin(usuario, permitirErro);
+  });
 });
 
 // Acessar a página de login

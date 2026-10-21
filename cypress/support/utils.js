@@ -9,3 +9,12 @@ export function gerarIdAleatorio(tamanho = 16) {
     () => caracteres.charAt(Math.floor(Math.random() * caracteres.length))
   ).join('');
 }
+
+export const normalizarTexto = (texto) => {
+  return texto
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .toLowerCase();
+};

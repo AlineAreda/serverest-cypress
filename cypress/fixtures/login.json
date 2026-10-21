@@ -1,13 +1,13 @@
 {
   "administrador": {
-    "nome": "Marina Alves",
-    "email": "mari.adm@email.com",
+    "nome": "Mariana Alves",
+    "email": "mariana.adm@email.com",
     "password": "Teste@123",
     "administrador": "true"
   },
   "usuarioComum": {
-    "nome": "Lucas Ferreira",
-    "email": "lucas.comum@email.com",
+    "nome": "Eduardo Ferreira",
+    "email": "eduardo.comum@email.com",
     "password": "Teste@123",
     "administrador": "false"
   },

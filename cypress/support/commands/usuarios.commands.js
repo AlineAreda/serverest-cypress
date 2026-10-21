@@ -55,3 +55,23 @@ Cypress.Commands.add('excluirUsuarioPorId', (id, permitirErro = false) => {
     return response;
   });
 });
+
+// Garantir que o usuário esteja cadastrado antes da autenticação
+Cypress.Commands.add('garantirUsuarioCadastrado', (usuario) => {
+  return cy.consultarUsuarios({ email: usuario.email }).then((response) => {
+    expect(response.status).to.eq(200);
+
+    const usuarioExistente = response.body.usuarios.find(
+      (item) => item.email === usuario.email
+    );
+
+    if (usuarioExistente) {
+      return cy.wrap(usuarioExistente);
+    }
+
+    return cy.cadastrarUsuario(usuario).then((cadastro) => {
+      expect(cadastro.status).to.eq(201);
+      return cadastro.body;
+    });
+  });
+});

@@ -1,3 +1,5 @@
+import { normalizarTexto } from '../utils';
+
 const urlApi = Cypress.expose('apiUrl');
 
 Cypress.Commands.add('excluirProdutoPorId', (id, token) => {
@@ -49,18 +51,10 @@ Cypress.Commands.add('verificarErrosCadastroProduto', (mensagens) => {
     .should(($alertas) => {
       const textos = $alertas
         .toArray()
-        .map((alerta) => alerta.textContent.trim()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/\s+/g, ' ')
-          .toLowerCase());
+        .map((alerta) => normalizarTexto(alerta.textContent));
 
       mensagens.forEach((mensagem) => {
-        const mensagemNormalizada = mensagem
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/\s+/g, ' ')
-          .toLowerCase();
+        const mensagemNormalizada = normalizarTexto(mensagem);
 
         expect(
           textos.some((texto) => texto.includes(mensagemNormalizada)),
